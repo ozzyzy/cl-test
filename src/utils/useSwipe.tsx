@@ -1,15 +1,15 @@
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 
-export function useSwipe(onSwipeLeft?: any, onSwipeRight?: any, rangeOffset = 4) {
+export function useSwipe(onSwipeLeft?, onSwipeRight?, rangeOffset = 4) {
 
 	let firstTouch = 0
 
-	function onTouchStart(e: any) {
+	function onTouchStart(e) {
 		firstTouch = e.nativeEvent.pageX
 	}
 
-	function onTouchEnd(e: any){
+	function onTouchEnd(e) {
 		const positionX = e.nativeEvent.pageX
 		const range = windowWidth / rangeOffset
 

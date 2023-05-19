@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Image } from 'react-native';
 import { TopBar } from '../components/TopBar';
 import { useSwipe } from '../utils/useSwipe';
 import { useEffect, useMemo, useState } from 'react';
@@ -6,13 +6,14 @@ import ClockIcon from '../assets/icons/clock.svg';
 import { formatDate } from '../utils/formatDate';
 import { Pagination } from '../components/Pagination';
 import { TheEndPage } from './TheEndPage';
+import Svg, { Path } from 'react-native-svg';
 
 export const ArticlePage = (props) => {
 	const [article, setArticle] = useState(null);
 	useEffect(() => {
 		fetch(`http://localhost:3001/topics/${props.route.params.item.id}/${props.route.params.id}`)
 			.then(res => res.json())
-			.then(data => setArticle(data))
+			.then((data: IArticle) => setArticle(data))
 			.catch(error => console.log(error))
 	}, []);
 
@@ -36,13 +37,26 @@ export const ArticlePage = (props) => {
 			return (
 				!article ? null : (
 					<View style={styles.column}>
+						<TopBar item={props.route.params.item} navigation={props.navigation}></TopBar>
 						{page === 0 ? (
 							<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-								<TopBar item={props.route.params.item} navigation={props.navigation}></TopBar>
-								<ImageBackground source={require('../assets/images/mock.png')}
-												 resizeMode={'cover'}
-												 imageStyle={{ borderBottomLeftRadius: 36}}
-												 style={styles.image}/>
+								<Image source={!article.image ? require('../assets/images/mock.png') : article.image}
+												 style={styles.image}
+												 resizeMode={'cover'}/>
+								<View style={styles.curve}>
+									<Svg
+										width={`${50}`}
+										height={`${50}`}
+										fill="#FFFAF5"
+										strokeWidth={1}
+										viewBox={`0 0 ${200} ${200}`}>
+										<Path
+											d={`M0 0L0 ${200}L${200} ${200}Q${30} ${
+												200 - 30
+											} 0 0 `}
+										/>
+									</Svg>
+								</View>
 								<View style={styles.details}>
 									<Text style={styles.title}>{props.route.params.article.title}</Text>
 									<View style={styles.row}>
@@ -75,11 +89,15 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFAF5',
 	},
 	details: {
-		flex: 1,
+		position: 'absolute',
+		bottom: 0,
+		height: '60%',
 		width: '100%',
-		marginTop: 64,
+		paddingTop: 64,
 		paddingLeft: 24,
-		paddingRight: 24
+		paddingRight: 24,
+		borderTopRightRadius: 36,
+		backgroundColor: '#FFFAF5',
 	},
 	title: {
 		fontSize: 28,
@@ -114,12 +132,23 @@ const styles = StyleSheet.create({
 	image: {
 		flex: 1,
 		width: '100%',
-		maxHeight: 394,
+		maxHeight: '45%',
 	},
 	column: {
 		flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between'
+	},
+	curve: {
+		position: 'absolute',
+		left: -2,
+		top: '33%',
 	}
 });
+
+export interface IArticle {
+	id: string;
+	publishedAt: number;
+	description: string;
+}

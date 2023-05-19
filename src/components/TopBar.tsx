@@ -1,17 +1,24 @@
-import { FC } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { FC} from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { getIcon } from '../utils/getIcon';
 import ArrowIcon from '../assets/icons/arrow.svg';
+import { IFullTopic } from '../pages/DetailsPage';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { getColor } from '../utils/getColor';
+import { Shadow } from 'react-native-shadow-2';
 
-export const TopBar: FC = (props) => {
+export const TopBar: FC<ITopBarProps> = ({item, navigation}) => {
+	let color: string = getColor(item.id)
 	return (
-		<View style={styles.bar}>
-			<TouchableOpacity onPress={() => props.navigation.goBack()}>
-				<ArrowIcon width={9} height={16} fill={'#FFF'} style={styles.arrow} />
-			</TouchableOpacity>
-			<View style={styles.icon}>{getIcon(props.item.id)}</View>
-			<Text style={styles.text}>{props.item.category}</Text>
-		</View>
+		<Shadow distance={4} startColor={'#EEEEEE'} endColor={'#fff'} offset={[3, 4]} style={{width: Dimensions.get('window').width}}>
+			<View style={[styles.bar, {backgroundColor: color}]}>
+				<TouchableOpacity onPress={() => navigation.goBack()}>
+					<ArrowIcon width={9} height={16} fill={'#FFF'} style={styles.arrow} />
+				</TouchableOpacity>
+				<View style={styles.icon}>{getIcon(item.id)}</View>
+				<Text style={styles.text}>{item.category}</Text>
+			</View>
+		</Shadow>
 	)
 }
 
@@ -20,7 +27,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'flex-start',
 		alignItems: 'flex-end',
-		backgroundColor: '#FF712C',
 		height: 80,
 		width: '100%',
 		paddingBottom: 11,
@@ -40,3 +46,8 @@ const styles = StyleSheet.create({
 		marginBottom: 5
 	}
 });
+
+export interface ITopBarProps {
+	item: IFullTopic;
+	navigation: NativeStackNavigationProp<any, any>;
+}

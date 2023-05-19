@@ -1,25 +1,28 @@
 import { StyleSheet, View, ScrollView, ImageBackground, Text, TouchableOpacity } from 'react-native';
 import { getImage } from '../utils/getImage';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getGradient } from '../utils/getGradient';
+import { getColor } from '../utils/getColor';
 import { getIcon } from '../utils/getIcon';
+import { FC } from 'react';
+import { ITopic } from '../pages/VerstehenPage';
+import { NavigationProp } from '@react-navigation/core';
 
-export const Carousel = (props) => {
+export const Carousel: FC<ICarouselProps> = ({items, navigation}) => {
 	return (
 		<View style={styles.wrapper}>
 			<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-				{props.items.map(item => {
+				{items.map(item => {
 					return (
 						<TouchableOpacity style={styles.item}
 										  key={item.id}
-										  disabled={props.items.indexOf(item) !== 0}
-										  onPress={() => props.navigation.navigate('Details', {id: item.id})}>
+										  disabled={items.indexOf(item) !== 0}
+										  onPress={() => navigation.navigate('Details', {id: item.id})}>
 							<ImageBackground source={getImage(item.id)}
 											 resizeMode="cover"
 											 imageStyle={{ borderRadius: 16}}
 											 style={styles.image}>
 								<LinearGradient
-									colors={['transparent', getGradient(item.id)]}
+									colors={['transparent', getColor(item.id)]}
 									style={styles.linearGradient}
 								/>
 								<View style={styles.imageDetails}>
@@ -78,3 +81,8 @@ const styles = StyleSheet.create({
 		borderRadius: 16
 	}
 });
+
+export interface ICarouselProps {
+	items: ITopic[];
+	navigation: NavigationProp<any, any>;
+}

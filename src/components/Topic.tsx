@@ -1,42 +1,54 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useMemo } from 'react';
 import ClockIcon from '../assets/icons/clock.svg';
+import { Shadow } from 'react-native-shadow-2';
 
 export const Topic = (props) => {
 	return (
 		useMemo(() => {
 			return(
-				<View style={styles.article}>
-					<Image source={require('../assets/images/mock.png')}
-									 style={styles.image}/>
-					<TouchableOpacity style={styles.info}
-									  disabled={props.article.id !== '1'}
-									  onPress={() => props.navigation.navigate('Article', {id: props.article.id, item: props.item, article: props.article})}>
-						<View>
-							<Text style={styles.articleTitle}>{props.article.title}</Text>
-							<Text style={styles.articleText}>{props.article.shortDescription}</Text>
-						</View>
-						<View style={styles.clock}>
-							<ClockIcon width={13} height={13} style={styles.clockIcon}/>
-							<Text style={styles.articleText}>{props.article.readingTime} min</Text>
-						</View>
-					</TouchableOpacity>
-				</View>
-			)
+				<Shadow distance={5} startColor={'#EEEEEE'} endColor={'#FCFCFC'} offset={[3, 4]} style={{width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16}}>
+					<View style={styles.article}>
+						<Image source={!props.article.image ? require('../assets/images/mock.png') : props.article.image}
+							   style={styles.image}/>
+						<TouchableOpacity style={styles.info}
+										  disabled={props.article.id !== '1'}
+										  onPress={() => props.navigation.navigate('Article', {id: props.article.id, item: props.item, article: props.article})}>
+							<View>
+								<Text style={styles.articleTitle}>{props.article.title}</Text>
+								<Text style={styles.articleText}>{props.article.shortDescription}</Text>
+							</View>
+							<View style={styles.clock}>
+								<ClockIcon width={13} height={13} style={styles.clockIcon}/>
+								<Text style={styles.articleText}>{props.article.readingTime} min</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</Shadow>
+					)
 		}, [props])
 	)
 }
 
 const styles = StyleSheet.create({
+	shadow: {
+		padding: 2,
+		marginTop: 16,
+		shadowColor: '#171717',
+		shadowOffset: {
+			width: -2,
+			height: 4,
+		},
+		shadowOpacity: 0.3,
+		shadowRadius: 3,
+		elevation: 2,
+	},
 	article: {
-		// flex: 1,
 		display: 'flex',
 		flexDirection: 'row',
 		backgroundColor: '#F9F4EF',
-		marginTop: 16,
 		borderRadius: 16,
 		height: 144,
-		width: 'auto'
 	},
 	articleTitle: {
 		fontSize: 16,
@@ -57,7 +69,9 @@ const styles = StyleSheet.create({
 	image: {
 		justifyContent: 'center',
 		width: 104,
-		borderRadius: 16
+		height: 144,
+		borderRadius: 16,
+		resizeMode: 'cover'
 	},
 	info: {
 		flex: 1,

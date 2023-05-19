@@ -1,17 +1,18 @@
-import { TabBar, TabNames } from './TabBar';
+import { TabBar } from './TabBar';
 import { UbersichtPage } from '../pages/ÜbersichtPage';
 import { VerstehenStackPage } from '../pages/VerstehenStackPage';
 import { ProjektePage } from '../pages/ProjektePage';
 import { ProfilPage } from '../pages/ProfilPage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
-import { useEffect, useState } from 'react';
+import { FC, useState } from 'react';
+import { TabNames } from '../utils/tabNames';
 
-export const TabNavigator = () => {
+export const TabNavigator: FC = () => {
 	const [currentRoute, setCurrentRoute] = useState('');
 	const Tab = createBottomTabNavigator();
 	let tabNames = TabNames;
-	const hiddenTabBarRoutes = ['Article', 'TheEnd'];
+	const hiddenTabBarRoutes: string[] = ['Article', 'TheEnd'];
 
 	return (
 		<Tab.Navigator

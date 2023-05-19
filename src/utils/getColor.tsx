@@ -1,4 +1,4 @@
-export function getGradient(name) {
+export function getColor(name: string): string {
 	switch (name) {
 		case "mobility":
 			return '#265D4D';

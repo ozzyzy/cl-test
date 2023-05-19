@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 import { TopBar } from '../components/TopBar';
 import { Topic } from '../components/Topic';
@@ -9,7 +9,7 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
 	useEffect(() => {
 		fetch(`http://localhost:3001/topics/${props.route.params.id}`)
 			.then(res => res.json())
-			.then(data => setTopic(data))
+			.then((data: IFullTopic) => setTopic(data))
 			.catch(error => console.log(error))
 	}, []);
 
@@ -77,9 +77,26 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: '700',
 		lineHeight: 24,
-		marginBottom: 10
+		marginBottom: 26
 	},
 	list: {
 		marginBottom: 20
 	}
 });
+
+export interface IFullTopic {
+	id: string;
+	category: string;
+	title: string;
+	description: string;
+	articles: IArticle[];
+}
+
+export interface IArticle {
+	id: string;
+	title: string;
+	shortDescription: string;
+	readingTime: number;
+	image: null | string;
+}
+

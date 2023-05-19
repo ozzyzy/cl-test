@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Carousel } from '../components/Carousel';
+import { NavigationProp } from '@react-navigation/core';
+import CurveIcon from '../assets/icons/curve.svg';
 
-export const VerstehenPage = ({navigation}) => {
+export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navigation}) => {
 	const [topics, setTopics] = useState(null);
 	useEffect(() => {
 		fetch('http://localhost:3001/topics')
 			.then(res => res.json())
-			.then(data => setTopics(data))
+			.then((data: ITopic[]) => setTopics(data))
 			.catch(error => console.log(error))
 	}, []);
 
@@ -19,6 +21,9 @@ export const VerstehenPage = ({navigation}) => {
 						<View style={styles.top}>
 							<Text style={styles.title}>Verstehen</Text>
 							<Text style={styles.description}>Wir helfen dir, den Klimawandel zu verstehen, damit du deinen Einfluss bewusst verringern kannst.</Text>
+						</View>
+						<View style={styles.curve}>
+							<CurveIcon width={40} height={40}></CurveIcon>
 						</View>
 						<View style={styles.block}>
 							<Text style={styles.subtitle}>Deine wichtigsten {'\n'}Themen</Text>
@@ -52,7 +57,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 42,
 		fontWeight: '700',
-		lineHeight: 56
+		lineHeight: 56,
 	},
 	description: {
 		fontSize: 16,
@@ -71,5 +76,17 @@ const styles = StyleSheet.create({
 		lineHeight: 40,
 		marginTop: 50,
 		marginBottom: 38
+	},
+	curve: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		width: '100%',
+		marginTop: -7,
 	}
 });
+
+export interface ITopic {
+	id: string;
+	name: string;
+}

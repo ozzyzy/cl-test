@@ -1,4 +1,4 @@
-export function getImage(name) {
+export function getImage(name: string) {
 	switch (name) {
 		case "mobility":
 			return require('../assets/images/mobility.png')

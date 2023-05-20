@@ -1,7 +1,7 @@
-import HouseIcon from '../assets/icons/house.svg';
-import LampIcon from '../assets/icons/lamp.svg';
-import TreeIcon from '../assets/icons/tree.svg';
-import SmileIcon from '../assets/icons/smile.svg';
+import HouseIcon from '../../assets/icons/house.svg';
+import LampIcon from '../../assets/icons/lamp.svg';
+import TreeIcon from '../../assets/icons/tree.svg';
+import SmileIcon from '../../assets/icons/smile.svg';
 import { TabNames } from './tabNames';
 import { ReactElement } from 'react';
 

@@ -1,7 +1,7 @@
 import { FC} from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { getIcon } from '../utils/getIcon';
-import ArrowIcon from '../assets/icons/arrow.svg';
+import ArrowIcon from '../../assets/icons/arrow.svg';
 import { IFullTopic } from '../pages/DetailsPage';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { getColor } from '../utils/getColor';

@@ -1,7 +1,7 @@
-import CarIcon from '../assets/icons/car.svg';
-import StarIcon from '../assets/icons/star.svg';
-import PlaneIcon from '../assets/icons/plane.svg';
-import HouseIcon from '../assets/icons/house.svg';
+import CarIcon from '../../assets/icons/car.svg';
+import StarIcon from '../../assets/icons/star.svg';
+import PlaneIcon from '../../assets/icons/plane.svg';
+import HouseIcon from '../../assets/icons/house.svg';
 import { ReactElement } from 'react';
 
 export function getIcon(name: string): ReactElement {

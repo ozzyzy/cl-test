@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { useMemo } from 'react';
-import ClockIcon from '../assets/icons/clock.svg';
+import ClockIcon from '../../assets/icons/clock.svg';
 import { Shadow } from 'react-native-shadow-2';
 
 export const Topic = (props) => {
@@ -9,7 +9,7 @@ export const Topic = (props) => {
 			return(
 				<Shadow distance={5} startColor={'#EEEEEE'} endColor={'#FCFCFC'} offset={[3, 4]} style={{width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16}}>
 					<View style={styles.article}>
-						<Image source={!props.article.image ? require('../assets/images/mock.png') : props.article.image}
+						<Image source={!props.article.image ? require('../../assets/images/mock.png') : props.article.image}
 							   style={styles.image}/>
 						<TouchableOpacity style={styles.info}
 										  disabled={props.article.id !== '1'}

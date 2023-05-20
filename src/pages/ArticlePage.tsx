@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, ScrollView, Image } from 'react-native';
 import { TopBar } from '../components/TopBar';
 import { useSwipe } from '../utils/useSwipe';
 import { useEffect, useMemo, useState } from 'react';
-import ClockIcon from '../assets/icons/clock.svg';
+import ClockIcon from '../../assets/icons/clock.svg';
 import { formatDate } from '../utils/formatDate';
 import { Pagination } from '../components/Pagination';
 import { TheEndPage } from './TheEndPage';
@@ -40,7 +40,7 @@ export const ArticlePage = (props) => {
 						<TopBar item={props.route.params.item} navigation={props.navigation}></TopBar>
 						{page === 0 ? (
 							<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-								<Image source={!article.image ? require('../assets/images/mock.png') : article.image}
+								<Image source={!article.image ? require('../../assets/images/mock.png') : article.image}
 												 style={styles.image}
 												 resizeMode={'cover'}/>
 								<View style={styles.curve}>

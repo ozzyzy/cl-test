@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Carousel } from '../components/Carousel';
 import { NavigationProp } from '@react-navigation/core';
-import CurveIcon from '../assets/icons/curve.svg';
+import CurveIcon from '../../assets/icons/curve.svg';
 
 export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navigation}) => {
 	const [topics, setTopics] = useState(null);

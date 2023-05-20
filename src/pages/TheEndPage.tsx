@@ -12,7 +12,7 @@ export const TheEndPage = (props) => {
 
 	return (
 		<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-			<Image source={require('../assets/images/end.png')}/>
+			<Image source={require('../../assets/images/end.png')}/>
 		</View>
 	)
 }

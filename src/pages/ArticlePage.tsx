@@ -1,27 +1,44 @@
 import { StyleSheet, View, Text, ScrollView, Image } from 'react-native';
 import { TopBar } from '../components/TopBar';
 import { useSwipe } from '../utils/useSwipe';
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import ClockIcon from '../../assets/icons/clock.svg';
 import { formatDate } from '../utils/formatDate';
 import { Pagination } from '../components/Pagination';
 import { TheEndPage } from './TheEndPage';
 import Svg, { Path } from 'react-native-svg';
+import { IArticle, IFullTopic } from './DetailsPage';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
-export const ArticlePage = (props) => {
-	const [article, setArticle] = useState(null);
+
+interface IArticlePageProps {
+	route: IParams;
+	navigation: NativeStackNavigationProp<any, any>;
+}
+
+interface IParams {
+	params: {
+		id: string;
+		item: IFullTopic;
+		article: IArticle;
+	}
+}
+
+export const ArticlePage: FC<IArticlePageProps> = ({ route, navigation }) => {
+	const { id, item, article } = route.params;
+	const [currentArticle, setCurrentArticle] = useState<IShortArticle>(null);
+	const [page, setPage] = useState<number>(0);
+
 	useEffect(() => {
-		fetch(`http://localhost:3001/topics/${props.route.params.item.id}/${props.route.params.id}`)
+		fetch(`http://localhost:3001/topics/${item.id}/${id}`)
 			.then(res => res.json())
-			.then((data: IArticle) => setArticle(data))
+			.then((data: IShortArticle) => setCurrentArticle(data))
 			.catch(error => console.log(error))
 	}, []);
 
-	const [page, setPage] = useState(0);
-
 	let date: string;
-	if (article) {
-		date = formatDate(new Date(article.publishedAt));
+	if (currentArticle) {
+		date = formatDate(new Date(currentArticle.publishedAt));
 	}
 
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
@@ -35,9 +52,9 @@ export const ArticlePage = (props) => {
 	return (
 		useMemo(() => {
 			return (
-				!article ? null : (
+				currentArticle && (
 					<View style={styles.column}>
-						<TopBar item={props.route.params.item} navigation={props.navigation}></TopBar>
+						<TopBar item={item} navigation={navigation}></TopBar>
 						{page === 0 ? (
 							<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
 								<Image source={!article.image ? require('../../assets/images/mock.png') : article.image}
@@ -58,16 +75,16 @@ export const ArticlePage = (props) => {
 									</Svg>
 								</View>
 								<View style={styles.details}>
-									<Text style={styles.title}>{props.route.params.article.title}</Text>
+									<Text style={styles.title}>{article.title}</Text>
 									<View style={styles.row}>
 										<View style={styles.clock}>
 											<ClockIcon width={13} height={13} style={styles.clockIcon}/>
-											<Text style={styles.articleText}>{props.route.params.article.readingTime} min</Text>
+											<Text style={styles.articleText}>{article.readingTime} min</Text>
 										</View>
 										<Text style={styles.articleText}>{date}</Text>
 									</View>
 									<ScrollView showsVerticalScrollIndicator={false}>
-										<Text style={styles.description}>{article.description}</Text>
+										<Text style={styles.description}>{currentArticle.description}</Text>
 									</ScrollView>
 								</View>
 							</View>
@@ -76,7 +93,7 @@ export const ArticlePage = (props) => {
 					</View>
 				)
 			)
-		}, [article, page])
+		}, [currentArticle, page])
 	)
 }
 
@@ -147,7 +164,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export interface IArticle {
+interface IShortArticle {
 	id: string;
 	publishedAt: number;
 	description: string;

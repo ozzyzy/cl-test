@@ -1,8 +1,14 @@
+import { FC } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useSwipe } from '../utils/useSwipe';
 
-export const TheEndPage = (props) => {
+interface TheEndPageProps {
+	onSwipeRight: Function;
+}
+
+export const TheEndPage: FC<TheEndPageProps> = (props) => {
 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
+
 	function onSwipeLeft() {
 	}
 
@@ -12,7 +18,7 @@ export const TheEndPage = (props) => {
 
 	return (
 		<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-			<Image source={require('../../assets/images/end.png')}/>
+			<Image source={require('../../assets/images/end.png')} />
 		</View>
 	)
 }

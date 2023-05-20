@@ -1,38 +1,22 @@
-import { StyleSheet, View, ScrollView, ImageBackground, Text, TouchableOpacity } from 'react-native';
-import { getImage } from '../utils/getImage';
-import { LinearGradient } from 'expo-linear-gradient';
-import { getColor } from '../utils/getColor';
-import { getIcon } from '../utils/getIcon';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { FC } from 'react';
 import { ITopic } from '../pages/VerstehenPage';
 import { NavigationProp } from '@react-navigation/core';
+import { CarouselItem } from './CarouselItem';
 
-export const Carousel: FC<ICarouselProps> = ({items, navigation}) => {
+interface ICarouselProps {
+	items: ITopic[];
+	navigation: NavigationProp<any, any>;
+}
+
+export const Carousel: FC<ICarouselProps> = ({ items, navigation }) => {
+	const handleItemPress = (id) => {navigation.navigate('Details', { id: id })}
 	return (
 		<View style={styles.wrapper}>
 			<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-				{items.map(item => {
-					return (
-						<TouchableOpacity style={styles.item}
-										  key={item.id}
-										  disabled={items.indexOf(item) !== 0}
-										  onPress={() => navigation.navigate('Details', {id: item.id})}>
-							<ImageBackground source={getImage(item.id)}
-											 resizeMode="cover"
-											 imageStyle={{ borderRadius: 16}}
-											 style={styles.image}>
-								<LinearGradient
-									colors={['transparent', getColor(item.id)]}
-									style={styles.linearGradient}
-								/>
-								<View style={styles.imageDetails}>
-									<View style={styles.icon}>{getIcon(item.id)}</View>
-									<Text style={styles.imageText}>{item.name}</Text>
-								</View>
-							</ImageBackground>
-						</TouchableOpacity>
-					)
-				})}
+				{items.map(item =>
+						<CarouselItem key={item.id} item={item} disabled={items.indexOf(item) !== 0} onPress={() => handleItemPress(item.id)}/>
+				)}
 			</ScrollView>
 		</View>
 	)
@@ -45,44 +29,4 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center'
 	},
-	item: {
-		width: 312,
-		height: 192,
-		marginRight: 16,
-	},
-	image: {
-		flex: 1,
-		justifyContent: 'center'
-	},
-	imageDetails: {
-		position: 'absolute',
-		bottom: 12,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		alignSelf: 'center',
-	},
-	imageText: {
-		color: '#FFFFFF',
-		fontSize: 28,
-		fontWeight: '700',
-		lineHeight: 40
-	},
-	icon: {
-		marginRight: 12,
-	},
-	linearGradient: {
-		width: 312,
-		height: 96,
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		bottom: 0,
-		borderRadius: 16
-	}
 });
-
-export interface ICarouselProps {
-	items: ITopic[];
-	navigation: NavigationProp<any, any>;
-}

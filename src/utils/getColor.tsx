@@ -3,12 +3,12 @@ export function getColor(name: string): string {
 		case "mobility":
 			return '#265D4D';
 		case "lifestyle":
-			return '#E9A100'
+			return '#E9A100';
 		case "living":
-			return '#FF712C'
+			return '#FF712C';
 		case "travel":
-			return '#73A7C0'
+			return '#73A7C0';
 		default:
-			return '#E9A100'
+			return '#E9A100';
 	}
 }

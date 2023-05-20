@@ -2,15 +2,23 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { FC } from 'react';
 import { Shadow } from 'react-native-shadow-2';
 
-export const Pagination: FC<IPaginationProps> = ({number, current}) => {
-	let screenWidth = (Dimensions.get('window').width - 48 - 2) / number;
+
+interface IPaginationProps {
+	number: number;
+	current: number;
+}
+
+const FULL_PADDING = 52;
+
+export const Pagination: FC<IPaginationProps> = ({ number, current }) => {
+	const screenWidth = (Dimensions.get('window').width - FULL_PADDING) / number;
 
 	return (
-		<Shadow offset={[3, 4]} style={{width: Dimensions.get('window').width}}>
+		<Shadow offset={[3, 4]} style={{ width: Dimensions.get('window').width }}>
 			<View style={styles.main}>
 				{
 					[...Array(number)].map((v, i) => <View key={i}
-														   style={[{width: screenWidth}, styles.page, i <= current ? styles.dark : styles.light]}></View>)
+						style={[{ width: screenWidth }, styles.page, i <= current ? styles.dark : styles.light]} />)
 				}
 			</View>
 		</Shadow>
@@ -25,6 +33,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		backgroundColor: '#FFFAF5',
 		height: 52,
+		// возможно можно короткую запись
 		paddingLeft: 24,
 		paddingRight: 24,
 	},
@@ -38,8 +47,3 @@ const styles = StyleSheet.create({
 		backgroundColor: '#12173D'
 	}
 });
-
-export interface IPaginationProps {
-	number: number;
-	current: number;
-}

@@ -9,28 +9,27 @@ import { FC, useState } from 'react';
 import { TabNames } from '../utils/tabNames';
 
 export const TabNavigator: FC = () => {
-	const [currentRoute, setCurrentRoute] = useState('');
+	const [currentRoute, setCurrentRoute] = useState<string>('');
 	const Tab = createBottomTabNavigator();
-	let tabNames = TabNames;
 	const hiddenTabBarRoutes: string[] = ['Article', 'TheEnd'];
 
 	return (
 		<Tab.Navigator
-			initialRouteName={tabNames.Verstehen}
-			screenOptions={{headerShown: false}}
-			tabBar={(props) => hiddenTabBarRoutes.includes(currentRoute) ? null : <TabBar {...props}/>}
+			initialRouteName={TabNames.Verstehen}
+			screenOptions={{ headerShown: false }}
+			tabBar={(props) => hiddenTabBarRoutes.includes(currentRoute) ? null : <TabBar {...props} />}
 		>
-			<Tab.Screen name="Übersicht" component={UbersichtPage} />
-			<Tab.Screen name="Verstehen"
-						component={VerstehenStackPage}
-						listeners={({ route }) => ({
-							state: () => {
-								const subRoute = getFocusedRouteNameFromRoute(route);
-								setCurrentRoute(subRoute);
-							}
-						})}/>
-			<Tab.Screen name="Projekte" component={ProjektePage} />
-			<Tab.Screen name="Dein Profil" component={ProfilPage} />
+			<Tab.Screen name={TabNames.Übersicht} component={UbersichtPage} />
+			<Tab.Screen name={TabNames.Verstehen}
+				component={VerstehenStackPage}
+				listeners={({ route }) => ({
+					state: () => {
+						const subRoute = getFocusedRouteNameFromRoute(route);
+						setCurrentRoute(subRoute);
+					}
+				})} />
+			<Tab.Screen name={TabNames.Projekte} component={ProjektePage} />
+			<Tab.Screen name={TabNames.DeinProfil} component={ProfilPage} />
 		</Tab.Navigator>
 	)
 }

@@ -1,34 +1,42 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
-import { useMemo } from 'react';
+import React, { FC } from 'react';
 import ClockIcon from '../../assets/icons/clock.svg';
 import { Shadow } from 'react-native-shadow-2';
+import { IArticle, IFullTopic } from '../pages/DetailsPage';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
-export const Topic = (props) => {
+interface ITopicProps {
+	key: string;
+	item: IFullTopic;
+	article: IArticle;
+	id: string;
+	navigation: NativeStackNavigationProp<any, any>;
+}
+
+export const TopicComponent: FC<ITopicProps> = (props) => {
 	return (
-		useMemo(() => {
-			return(
-				<Shadow distance={5} startColor={'#EEEEEE'} endColor={'#FCFCFC'} offset={[3, 4]} style={{width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16}}>
-					<View style={styles.article}>
-						<Image source={!props.article.image ? require('../../assets/images/mock.png') : props.article.image}
-							   style={styles.image}/>
-						<TouchableOpacity style={styles.info}
-										  disabled={props.article.id !== '1'}
-										  onPress={() => props.navigation.navigate('Article', {id: props.article.id, item: props.item, article: props.article})}>
-							<View>
-								<Text style={styles.articleTitle}>{props.article.title}</Text>
-								<Text style={styles.articleText}>{props.article.shortDescription}</Text>
-							</View>
-							<View style={styles.clock}>
-								<ClockIcon width={13} height={13} style={styles.clockIcon}/>
-								<Text style={styles.articleText}>{props.article.readingTime} min</Text>
-							</View>
-						</TouchableOpacity>
+		<Shadow distance={5} startColor='#EEEEEE' endColor='#FCFCFC' offset={[3, 4]} style={{ width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16 }}>
+			<View style={styles.article}>
+				<Image source={!props.article.image ? require('../../assets/images/mock.png') : props.article.image}
+					   style={styles.image} />
+				<TouchableOpacity style={styles.info}
+								  disabled={props.article.id !== '1'}
+								  onPress={() => props.navigation.navigate('Article', { id: props.article.id, item: props.item, article: props.article })}>
+					<View>
+						<Text style={styles.articleTitle}>{props.article.title}</Text>
+						<Text style={styles.articleText}>{props.article.shortDescription}</Text>
 					</View>
-				</Shadow>
-					)
-		}, [props])
+					<View style={styles.clock}>
+						<ClockIcon width={13} height={13} style={styles.clockIcon} />
+						<Text style={styles.articleText}>{props.article.readingTime} min</Text>
+					</View>
+				</TouchableOpacity>
+			</View>
+		</Shadow>
 	)
 }
+
+export const Topic = React.memo(TopicComponent);
 
 const styles = StyleSheet.create({
 	shadow: {

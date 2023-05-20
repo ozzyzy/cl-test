@@ -2,29 +2,37 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { getNavigationIcon } from '../utils/getNavigationIcon';
 import { TabNames } from '../utils/tabNames';
 import { Shadow } from 'react-native-shadow-2';
+import { FC } from 'react';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
-export function TabBar({ state, descriptors, navigation }) {
+export const TabBar: FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
 	return (
-		<Shadow offset={[4, 3]} style={{width: Dimensions.get('window').width}}>
+		<Shadow offset={[4, 3]} style={{ width: Dimensions.get('window').width }}>
 			<View style={styles.main}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
-					const label =
-						options.tabBarLabel !== undefined
-							? options.tabBarLabel
-							: options.title !== undefined
-								? options.title
-								: route.name;
+
+					const label = (() => {
+						if (options.tabBarLabel !== undefined) {
+							return options.tabBarLabel;
+						}
+						if (options.title !== undefined) {
+							return options.title;
+						}
+						return route.name;
+					})();
 
 					const isFocused = state.index === index;
-
+					const isVerstehen = route.name === TabNames.Verstehen;
 					const onPress = () => {
-						if (route.name !== TabNames.Verstehen) {
+						if (!isVerstehen) {
 							return;
 						}
+
 						const event = navigation.emit({
 							type: 'tabPress',
 							target: route.key,
+							canPreventDefault: true,
 						});
 						if (!isFocused && !event.defaultPrevented) {
 							navigation.navigate(route.name);
@@ -36,11 +44,11 @@ export function TabBar({ state, descriptors, navigation }) {
 							key={route.key}
 							onPress={onPress}
 							style={styles.button}
-							disabled={route.name !== TabNames.Verstehen}
+							disabled={!isVerstehen}
 						>
-							{getNavigationIcon(label, isFocused)}
+							{getNavigationIcon((label as string), isFocused)}
 							<Text style={[styles.buttonText, isFocused ? styles.dark : styles.light]}>
-								{label}
+								{label as string}
 							</Text>
 						</TouchableOpacity>
 					);

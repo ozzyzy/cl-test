@@ -5,7 +5,8 @@ import { TopBar } from '../components/TopBar';
 import { Topic } from '../components/Topic';
 
 export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
-	const [topic, setTopic] = useState(null);
+	const [topic, setTopic] = useState<IFullTopic>(null);
+
 	useEffect(() => {
 		fetch(`http://localhost:3001/topics/${props.route.params.id}`)
 			.then(res => res.json())
@@ -13,16 +14,16 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
 			.catch(error => console.log(error))
 	}, []);
 
-	const $topicList = useMemo(() => {
+	const topicList = useMemo(() => {
 		return (
-			!topic || !topic.articles ? null : (
+			!topic || topic.articles && (
 				<ScrollView horizontal={false} showsVerticalScrollIndicator={false} style={styles.list}>
 					{topic.articles.map(article => {
 						return <Topic key={article.id}
 									  item={topic}
 									  article={article}
 									  id={article.id}
-									  navigation={props.navigation}></Topic>
+									  navigation={props.navigation}/>
 					})}
 				</ScrollView>
 			)
@@ -31,14 +32,14 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
 
 	return (
 		useMemo(() => {
-			return !topic ? null : (
+			return topic && (
 				<View style={styles.main}>
 					<TopBar item={topic} navigation={props.navigation}></TopBar>
 					<View style={styles.details}>
 						<Text style={styles.title}>{topic.title}</Text>
 						<Text style={styles.description}>{topic.description}</Text>
 						<Text style={styles.ubersicht}>Übersicht</Text>
-						{$topicList}
+						{topicList}
 					</View>
 				</View>
 			)

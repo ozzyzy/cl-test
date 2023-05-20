@@ -4,8 +4,14 @@ import { Carousel } from '../components/Carousel';
 import { NavigationProp } from '@react-navigation/core';
 import CurveIcon from '../../assets/icons/curve.svg';
 
-export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navigation}) => {
-	const [topics, setTopics] = useState(null);
+
+interface IVerstehenPageProps {
+	navigation: NavigationProp<any, any>
+}
+
+export const VerstehenPage: FC<IVerstehenPageProps> = ({ navigation }) => {
+	const [topics, setTopics] = useState<ITopic[]>(null);
+
 	useEffect(() => {
 		fetch('http://localhost:3001/topics')
 			.then(res => res.json())
@@ -27,7 +33,7 @@ export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navig
 						</View>
 						<View style={styles.block}>
 							<Text style={styles.subtitle}>Deine wichtigsten {'\n'}Themen</Text>
-							{!topics ? null : <Carousel items={topics} navigation={navigation}></Carousel>}
+							{topics && <Carousel items={topics} navigation={navigation}/>}
 						</View>
 					</View>
 				</ScrollView>
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'center',
 		alignItems: 'flex-start',
-		backgroundColor:'#FFFFFF',
+		backgroundColor: '#FFFFFF',
 		borderBottomLeftRadius: 40,
 		paddingLeft: 26,
 		paddingBottom: 80,

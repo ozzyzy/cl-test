@@ -1,12 +1,11 @@
 export function formatDate(date: Date): string {
-		let month = (date.getMonth() + 1).toString();
-		let day = date.getDate().toString();
-		let year = date.getFullYear().toString();
+	const nextMonth = (date.getMonth() + 1).toString();
+	const currentDay = date.getDate().toString();
 
-	if (month.length < 2)
-		month = '0' + month;
-	if (day.length < 2)
-		day = '0' + day;
+	const month = nextMonth.length < 2 ?  '0' + nextMonth : nextMonth;
+	const day = currentDay.length < 2 ? '0' + currentDay : currentDay;
+	const year = date.getFullYear();
+
 
 	return [day, month, year].join('.');
 }

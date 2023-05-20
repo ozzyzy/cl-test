@@ -1,0 +1,494 @@
+diff --git a/src/components/Carousel.tsx b/src/components/Carousel.tsx
+index 53621dd..310f190 100644
+--- a/src/components/Carousel.tsx
++++ b/src/components/Carousel.tsx
+@@ -7,20 +7,28 @@ import { FC } from 'react';
+ import { ITopic } from '../pages/VerstehenPage';
+ import { NavigationProp } from '@react-navigation/core';
+ 
+-export const Carousel: FC<ICarouselProps> = ({items, navigation}) => {
++interface ICarouselProps {
++	items: ITopic[];
++	// обсудить - нужно ли сюда реально передавать navigation или достаточно онклик
++	navigation: NavigationProp<any, any>;
++}
++
++export const Carousel: FC<ICarouselProps> = ({ items, navigation }) => {
+ 	return (
+ 		<View style={styles.wrapper}>
+ 			<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+ 				{items.map(item => {
++					// обсудить - вынос в компонент
+ 					return (
+ 						<TouchableOpacity style={styles.item}
+-										  key={item.id}
+-										  disabled={items.indexOf(item) !== 0}
+-										  onPress={() => navigation.navigate('Details', {id: item.id})}>
++							key={item.id}
++							// посмотреть
++							disabled={items.indexOf(item) !== 0}
++							onPress={() => navigation.navigate('Details', { id: item.id })}>
+ 							<ImageBackground source={getImage(item.id)}
+-											 resizeMode="cover"
+-											 imageStyle={{ borderRadius: 16}}
+-											 style={styles.image}>
++								resizeMode="cover"
++								imageStyle={{ borderRadius: 16 }}
++								style={styles.image}>
+ 								<LinearGradient
+ 									colors={['transparent', getColor(item.id)]}
+ 									style={styles.linearGradient}
+@@ -81,8 +89,3 @@ const styles = StyleSheet.create({
+ 		borderRadius: 16
+ 	}
+ });
+-
+-export interface ICarouselProps {
+-	items: ITopic[];
+-	navigation: NavigationProp<any, any>;
+-}
+diff --git a/src/components/Pagination.tsx b/src/components/Pagination.tsx
+index 4038380..be39c1c 100644
+--- a/src/components/Pagination.tsx
++++ b/src/components/Pagination.tsx
+@@ -2,15 +2,22 @@ import { Dimensions, StyleSheet, View } from 'react-native';
+ import { FC } from 'react';
+ import { Shadow } from 'react-native-shadow-2';
+ 
+-export const Pagination: FC<IPaginationProps> = ({number, current}) => {
+-	let screenWidth = (Dimensions.get('window').width - 48 - 2) / number;
++
++interface IPaginationProps {
++	number: number;
++	current: number;
++}
++
++export const Pagination: FC<IPaginationProps> = ({ number, current }) => {
++	const screenWidth = (Dimensions.get('window').width - 50) / number;
+ 
+ 	return (
+-		<Shadow offset={[3, 4]} style={{width: Dimensions.get('window').width}}>
++		<Shadow offset={[3, 4]} style={{ width: Dimensions.get('window').width }}>
+ 			<View style={styles.main}>
+ 				{
++					// что-то не то
+ 					[...Array(number)].map((v, i) => <View key={i}
+-														   style={[{width: screenWidth}, styles.page, i <= current ? styles.dark : styles.light]}></View>)
++						style={[{ width: screenWidth }, styles.page, i <= current ? styles.dark : styles.light]} />)
+ 				}
+ 			</View>
+ 		</Shadow>
+@@ -25,6 +32,7 @@ const styles = StyleSheet.create({
+ 		justifyContent: 'space-between',
+ 		backgroundColor: '#FFFAF5',
+ 		height: 52,
++		// возможно можно короткую запись
+ 		paddingLeft: 24,
+ 		paddingRight: 24,
+ 	},
+@@ -38,8 +46,3 @@ const styles = StyleSheet.create({
+ 		backgroundColor: '#12173D'
+ 	}
+ });
+-
+-export interface IPaginationProps {
+-	number: number;
+-	current: number;
+-}
+diff --git a/src/components/TabBar.tsx b/src/components/TabBar.tsx
+index 5d40caa..41de686 100644
+--- a/src/components/TabBar.tsx
++++ b/src/components/TabBar.tsx
+@@ -2,13 +2,23 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
+ import { getNavigationIcon } from '../utils/getNavigationIcon';
+ import { TabNames } from '../utils/tabNames';
+ import { Shadow } from 'react-native-shadow-2';
++import { FC } from 'react';
+ 
+-export function TabBar({ state, descriptors, navigation }) {
++// поменять any 
++interface ITabBarProps {
++	state: any,
++	descriptors: any,
++	navigation: any,
++}
++
++export const TabBar: FC<ITabBarProps> = ({ state, descriptors, navigation }) => {
+ 	return (
+-		<Shadow offset={[4, 3]} style={{width: Dimensions.get('window').width}}>
++		<Shadow offset={[4, 3]} style={{ width: Dimensions.get('window').width }}>
+ 			<View style={styles.main}>
+ 				{state.routes.map((route, index) => {
+ 					const { options } = descriptors[route.key];
++
++					// сложно
+ 					const label =
+ 						options.tabBarLabel !== undefined
+ 							? options.tabBarLabel
+@@ -19,9 +29,11 @@ export function TabBar({ state, descriptors, navigation }) {
+ 					const isFocused = state.index === index;
+ 
+ 					const onPress = () => {
++						// route.name !== TabNames.Verstehen стоит вынести в переменную, так ка используетя > 1 раза
+ 						if (route.name !== TabNames.Verstehen) {
+ 							return;
+ 						}
++
+ 						const event = navigation.emit({
+ 							type: 'tabPress',
+ 							target: route.key,
+diff --git a/src/components/TabNavigator.tsx b/src/components/TabNavigator.tsx
+index 17339a5..7408772 100644
+--- a/src/components/TabNavigator.tsx
++++ b/src/components/TabNavigator.tsx
+@@ -10,25 +10,28 @@ import { TabNames } from '../utils/tabNames';
+ 
+ export const TabNavigator: FC = () => {
+ 	const [currentRoute, setCurrentRoute] = useState('');
++	// обсудить
+ 	const Tab = createBottomTabNavigator();
+-	let tabNames = TabNames;
++	// возможно enum 
+ 	const hiddenTabBarRoutes: string[] = ['Article', 'TheEnd'];
+ 
+ 	return (
+ 		<Tab.Navigator
+-			initialRouteName={tabNames.Verstehen}
+-			screenOptions={{headerShown: false}}
+-			tabBar={(props) => hiddenTabBarRoutes.includes(currentRoute) ? null : <TabBar {...props}/>}
++			initialRouteName={TabNames.Verstehen}
++			screenOptions={{ headerShown: false }}
++			//
++			tabBar={(props) => hiddenTabBarRoutes.includes(currentRoute) ? null : <TabBar {...props} />}
+ 		>
+ 			<Tab.Screen name="Übersicht" component={UbersichtPage} />
++			{/* поменять name на энамку */}
+ 			<Tab.Screen name="Verstehen"
+-						component={VerstehenStackPage}
+-						listeners={({ route }) => ({
+-							state: () => {
+-								const subRoute = getFocusedRouteNameFromRoute(route);
+-								setCurrentRoute(subRoute);
+-							}
+-						})}/>
++				component={VerstehenStackPage}
++				listeners={({ route }) => ({
++					state: () => {
++						const subRoute = getFocusedRouteNameFromRoute(route);
++						setCurrentRoute(subRoute);
++					}
++				})} />
+ 			<Tab.Screen name="Projekte" component={ProjektePage} />
+ 			<Tab.Screen name="Dein Profil" component={ProfilPage} />
+ 		</Tab.Navigator>
+diff --git a/src/components/TopBar.tsx b/src/components/TopBar.tsx
+index a090b58..043cd5f 100644
+--- a/src/components/TopBar.tsx
++++ b/src/components/TopBar.tsx
+@@ -1,4 +1,4 @@
+-import { FC} from 'react';
++import { FC } from 'react';
+ import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+ import { getIcon } from '../utils/getIcon';
+ import ArrowIcon from '../../assets/icons/arrow.svg';
+@@ -7,11 +7,21 @@ import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/n
+ import { getColor } from '../utils/getColor';
+ import { Shadow } from 'react-native-shadow-2';
+ 
+-export const TopBar: FC<ITopBarProps> = ({item, navigation}) => {
+-	let color: string = getColor(item.id)
++
++interface ITopBarProps {
++	item: IFullTopic;
++	// нужно ли передавать
++	navigation: NativeStackNavigationProp<any, any>;
++}
++
++
++export const TopBar: FC<ITopBarProps> = ({ item, navigation }) => {
++	// ts сам проставил тип из функции
++	const color = getColor(item.id);
++
+ 	return (
+-		<Shadow distance={4} startColor={'#EEEEEE'} endColor={'#fff'} offset={[3, 4]} style={{width: Dimensions.get('window').width}}>
+-			<View style={[styles.bar, {backgroundColor: color}]}>
++		<Shadow distance={4} startColor={'#EEEEEE'} endColor={'#fff'} offset={[3, 4]} style={{ width: Dimensions.get('window').width }}>
++			<View style={[styles.bar, { backgroundColor: color }]}>
+ 				<TouchableOpacity onPress={() => navigation.goBack()}>
+ 					<ArrowIcon width={9} height={16} fill={'#FFF'} style={styles.arrow} />
+ 				</TouchableOpacity>
+@@ -46,8 +56,3 @@ const styles = StyleSheet.create({
+ 		marginBottom: 5
+ 	}
+ });
+-
+-export interface ITopBarProps {
+-	item: IFullTopic;
+-	navigation: NativeStackNavigationProp<any, any>;
+-}
+diff --git a/src/components/Topic.tsx b/src/components/Topic.tsx
+index d8d87bf..e804bd6 100644
+--- a/src/components/Topic.tsx
++++ b/src/components/Topic.tsx
+@@ -1,31 +1,37 @@
+ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+-import { useMemo } from 'react';
++import { FC, useMemo } from 'react';
+ import ClockIcon from '../../assets/icons/clock.svg';
+ import { Shadow } from 'react-native-shadow-2';
+ 
+-export const Topic = (props) => {
++interface ITopicProps {
++
++}
++
++// разобраться с типами
++export const Topic: FC<any> = (props) => {
+ 	return (
++		// обсудить мемо и вынос в отдельный компонент и require, paddingLeft: 2, paddingRight: 2
+ 		useMemo(() => {
+-			return(
+-				<Shadow distance={5} startColor={'#EEEEEE'} endColor={'#FCFCFC'} offset={[3, 4]} style={{width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16}}>
++			return (
++				<Shadow distance={5} startColor='#EEEEEE' endColor='#FCFCFC' offset={[3, 4]} style={{ width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16 }}>
+ 					<View style={styles.article}>
+ 						<Image source={!props.article.image ? require('../../assets/images/mock.png') : props.article.image}
+-							   style={styles.image}/>
++							style={styles.image} />
+ 						<TouchableOpacity style={styles.info}
+-										  disabled={props.article.id !== '1'}
+-										  onPress={() => props.navigation.navigate('Article', {id: props.article.id, item: props.item, article: props.article})}>
++							disabled={props.article.id !== '1'}
++							onPress={() => props.navigation.navigate('Article', { id: props.article.id, item: props.item, article: props.article })}>
+ 							<View>
+ 								<Text style={styles.articleTitle}>{props.article.title}</Text>
+ 								<Text style={styles.articleText}>{props.article.shortDescription}</Text>
+ 							</View>
+ 							<View style={styles.clock}>
+-								<ClockIcon width={13} height={13} style={styles.clockIcon}/>
++								<ClockIcon width={13} height={13} style={styles.clockIcon} />
+ 								<Text style={styles.articleText}>{props.article.readingTime} min</Text>
+ 							</View>
+ 						</TouchableOpacity>
+ 					</View>
+ 				</Shadow>
+-					)
++			)
+ 		}, [props])
+ 	)
+ }
+diff --git a/src/pages/ArticlePage.tsx b/src/pages/ArticlePage.tsx
+index 54337e3..00ae179 100644
+--- a/src/pages/ArticlePage.tsx
++++ b/src/pages/ArticlePage.tsx
+@@ -1,15 +1,25 @@
+ import { StyleSheet, View, Text, ScrollView, Image } from 'react-native';
+ import { TopBar } from '../components/TopBar';
+ import { useSwipe } from '../utils/useSwipe';
+-import { useEffect, useMemo, useState } from 'react';
++import { FC, useEffect, useMemo, useState } from 'react';
+ import ClockIcon from '../../assets/icons/clock.svg';
+ import { formatDate } from '../utils/formatDate';
+ import { Pagination } from '../components/Pagination';
+ import { TheEndPage } from './TheEndPage';
+ import Svg, { Path } from 'react-native-svg';
+ 
+-export const ArticlePage = (props) => {
+-	const [article, setArticle] = useState(null);
++
++interface IArticlePageProps {
++	
++}
++
++// разобраться с типами
++export const ArticlePage: FC<any> = (props) => {
++	// есть ли тип для article
++	const [article, setArticle] = useState<any>(null);
++	const [page, setPage] = useState(0);
++
++	// лучше react query или свой хук
+ 	useEffect(() => {
+ 		fetch(`http://localhost:3001/topics/${props.route.params.item.id}/${props.route.params.id}`)
+ 			.then(res => res.json())
+@@ -17,8 +27,6 @@ export const ArticlePage = (props) => {
+ 			.catch(error => console.log(error))
+ 	}, []);
+ 
+-	const [page, setPage] = useState(0);
+-
+ 	let date: string;
+ 	if (article) {
+ 		date = formatDate(new Date(article.publishedAt));
+diff --git a/src/pages/DetailsPage.tsx b/src/pages/DetailsPage.tsx
+index 6cb61f2..4f9aad1 100644
+--- a/src/pages/DetailsPage.tsx
++++ b/src/pages/DetailsPage.tsx
+@@ -6,6 +6,8 @@ import { Topic } from '../components/Topic';
+ 
+ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
+ 	const [topic, setTopic] = useState(null);
++
++	// лучше react query или свой хук
+ 	useEffect(() => {
+ 		fetch(`http://localhost:3001/topics/${props.route.params.id}`)
+ 			.then(res => res.json())
+@@ -13,6 +15,7 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
+ 			.catch(error => console.log(error))
+ 	}, []);
+ 
++	// обсудить memom
+ 	const $topicList = useMemo(() => {
+ 		return (
+ 			!topic || !topic.articles ? null : (
+@@ -22,7 +25,7 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
+ 									  item={topic}
+ 									  article={article}
+ 									  id={article.id}
+-									  navigation={props.navigation}></Topic>
++									  navigation={props.navigation}/>
+ 					})}
+ 				</ScrollView>
+ 			)
+@@ -92,6 +95,7 @@ export interface IFullTopic {
+ 	articles: IArticle[];
+ }
+ 
++// дублируется интерфейс из ArticlePage
+ export interface IArticle {
+ 	id: string;
+ 	title: string;
+diff --git a/src/pages/TheEndPage.tsx b/src/pages/TheEndPage.tsx
+index 2bff21f..6cc5d67 100644
+--- a/src/pages/TheEndPage.tsx
++++ b/src/pages/TheEndPage.tsx
+@@ -1,8 +1,16 @@
++import { FC } from 'react';
+ import { Image, StyleSheet, View } from 'react-native';
+ import { useSwipe } from '../utils/useSwipe';
+ 
+-export const TheEndPage = (props) => {
++interface TheEndPageProps {
++
++}
++
++
++// разобрться с типами 
++export const TheEndPage: FC<any> = (props) => {
+ 	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
++
+ 	function onSwipeLeft() {
+ 	}
+ 
+@@ -12,7 +20,7 @@ export const TheEndPage = (props) => {
+ 
+ 	return (
+ 		<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+-			<Image source={require('../../assets/images/end.png')}/>
++			<Image source={require('../../assets/images/end.png')} />
+ 		</View>
+ 	)
+ }
+diff --git a/src/pages/VerstehenPage.tsx b/src/pages/VerstehenPage.tsx
+index 4f8f74d..93073d3 100644
+--- a/src/pages/VerstehenPage.tsx
++++ b/src/pages/VerstehenPage.tsx
+@@ -4,8 +4,15 @@ import { Carousel } from '../components/Carousel';
+ import { NavigationProp } from '@react-navigation/core';
+ import CurveIcon from '../../assets/icons/curve.svg';
+ 
+-export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navigation}) => {
++
++interface VerstehenPageProps {
++
++}
++
++export const VerstehenPage: FC<{ navigation: NavigationProp<any, any> }> = ({ navigation }) => {
+ 	const [topics, setTopics] = useState(null);
++
++	// аналогично
+ 	useEffect(() => {
+ 		fetch('http://localhost:3001/topics')
+ 			.then(res => res.json())
+@@ -27,6 +34,7 @@ export const VerstehenPage: FC<{navigation: NavigationProp<any, any>}> = ({navig
+ 						</View>
+ 						<View style={styles.block}>
+ 							<Text style={styles.subtitle}>Deine wichtigsten {'\n'}Themen</Text>
++							{/* обговорить один момент полезный */}
+ 							{!topics ? null : <Carousel items={topics} navigation={navigation}></Carousel>}
+ 						</View>
+ 					</View>
+@@ -48,7 +56,7 @@ const styles = StyleSheet.create({
+ 		width: '100%',
+ 		justifyContent: 'center',
+ 		alignItems: 'flex-start',
+-		backgroundColor:'#FFFFFF',
++		backgroundColor: '#FFFFFF',
+ 		borderBottomLeftRadius: 40,
+ 		paddingLeft: 26,
+ 		paddingBottom: 80,
+diff --git a/src/pages/VerstehenStackPage.tsx b/src/pages/VerstehenStackPage.tsx
+index d2f2991..bc80793 100644
+--- a/src/pages/VerstehenStackPage.tsx
++++ b/src/pages/VerstehenStackPage.tsx
+@@ -9,8 +9,8 @@ export const VerstehenStackPage: FC = () => {
+ 	const Stack = createStackNavigator();
+ 
+ 	return (
+-		<Stack.Navigator screenOptions={{headerShown: false}}>
+-		 	<Stack.Screen name="VerstehenPage" component={VerstehenPage}></Stack.Screen>
++		<Stack.Navigator screenOptions={{ headerShown: false }}>
++			<Stack.Screen name="VerstehenPage" component={VerstehenPage}></Stack.Screen>
+ 			<Stack.Screen name="Details" component={DetailsPage}></Stack.Screen>
+ 			<Stack.Screen name="Article" component={ArticlePage}></Stack.Screen>
+ 			<Stack.Screen name="TheEnd" component={TheEndPage}></Stack.Screen>
+diff --git a/src/utils/formatDate.tsx b/src/utils/formatDate.tsx
+index ba62982..87d4fc5 100644
+--- a/src/utils/formatDate.tsx
++++ b/src/utils/formatDate.tsx
+@@ -1,7 +1,8 @@
+ export function formatDate(date: Date): string {
+-		let month = (date.getMonth() + 1).toString();
+-		let day = date.getDate().toString();
+-		let year = date.getFullYear().toString();
++	// посмотреть вместе 
++	let month = (date.getMonth() + 1).toString();
++	let day = date.getDate().toString();
++	let year = date.getFullYear().toString();
+ 
+ 	if (month.length < 2)
+ 		month = '0' + month;
+diff --git a/src/utils/getColor.tsx b/src/utils/getColor.tsx
+index 26475a3..0af89a0 100644
+--- a/src/utils/getColor.tsx
++++ b/src/utils/getColor.tsx
+@@ -1,3 +1,4 @@
++// скорее всего name это не просто string
+ export function getColor(name: string): string {
+ 	switch (name) {
+ 		case "mobility":
+diff --git a/src/utils/getImage.tsx b/src/utils/getImage.tsx
+index d17368e..50929d2 100644
+--- a/src/utils/getImage.tsx
++++ b/src/utils/getImage.tsx
+@@ -1,3 +1,4 @@
++// странное
+ export function getImage(name: string) {
+ 	switch (name) {
+ 		case "mobility":
+diff --git a/src/utils/getNavigationIcon.tsx b/src/utils/getNavigationIcon.tsx
+index 8c6e1b4..272e788 100644
+--- a/src/utils/getNavigationIcon.tsx
++++ b/src/utils/getNavigationIcon.tsx
+@@ -6,10 +6,12 @@ import { TabNames } from './tabNames';
+ import { ReactElement } from 'react';
+ 
+ export function getNavigationIcon(name: string, isFocused: boolean): ReactElement {
++	// не забыть убрать
+ 	console.log(name, isFocused)
+ 	switch (name) {
+ 		case TabNames.Übersicht:
+ 			return <HouseIcon width={19} height={17} fill={isFocused ? '#12173D' : '#AAABB9'}/>
++		// надо проверить, а нужно ли это здесь раз уж в дефолте то же самое
+ 		case TabNames.Verstehen:
+ 			return <LampIcon width={16} height={16} fill={isFocused ? '#12173D' : '#AAABB9'}/>
+ 		case TabNames.Projekte:

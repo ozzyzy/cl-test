@@ -10,7 +10,7 @@
 * NPM	                	>= 6.0.0
 * React Native CLI        2.0.1
 * XCode                   >= 11.0
-* Any editor		        Latest Version
+* Any editor		       
 
 **Getting Started**
 

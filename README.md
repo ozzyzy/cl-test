@@ -17,7 +17,7 @@
 1. Clone the GitHub Repo either by using HTTPS or SSH onto your local machine using the command "git clone". The master branch will be cloned to your project.
 2. Checkout the branch main using the command git checkout <branch-name>.
 3. cd into the root directory of the project and run "npm install".
-4. run Android or iOS emulator - run "npm expo start" and choose platform.
+4. Run Android or iOS emulator - run "npm expo start" and choose platform.
 5. To run server on your local machine go to the Server folder and run "npm install" -> "node index"
 
 **Troubleshooting**

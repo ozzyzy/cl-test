@@ -23,10 +23,13 @@ Step 2:-
 Checkout the branch main using the command git checkout <branch-name>.
 
 Step 3:-
-cd into the root directory of the project and do "npm install".
+cd into the root directory of the project and run "npm install".
 
 Step 4:-
-run Android or iOS emulator - do "npm expo start" and choose platform.
+run Android or iOS emulator - run "npm expo start" and choose platform.
+
+Step 5:-
+To run server on your local machine go to the Server folder and run "npm install" -> "node index"
 
 **Troubleshooting**
 If the Android emulator doesn't detect the server, make sure your emulator is properly configured: 

@@ -2,7 +2,7 @@
 
 **Prerequisites**
 
-Software	          Version
+`Software	          Version
 expo					>=47
 Android studio 			>= 2.2.3
 Android Sdk	        	>= 25.0.2
@@ -11,7 +11,7 @@ NodeJs	                >= 8.0
 NPM	                	>= 6.0.0
 React Native CLI        2.0.1
 XCode                   >= 11.0
-Any editor		        Latest Version
+Any editor		        Latest Version`
 
 **Getting Started**
 

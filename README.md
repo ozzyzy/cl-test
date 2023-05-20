@@ -43,4 +43,4 @@ React Native was used for the project. Additional packages were installed for sp
 * If the design and technical specifications reveal that the pages of other parts of the application resemble 
 * those already implemented, it is necessary to create a common scalable component that will serve as the base 
 * for all pages. If not, develop the remaining pages separately.
-* 
+ 

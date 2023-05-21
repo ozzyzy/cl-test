@@ -1,21 +1,19 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { FC } from 'react';
-import { ITopic } from '../pages/VerstehenPage';
-import { NavigationProp } from '@react-navigation/core';
 import { CarouselItem } from './CarouselItem';
+import { ITopic } from '../types';
 
 interface ICarouselProps {
 	items: ITopic[];
-	navigation: NavigationProp<any, any>;
+	onItemPress: (id: string) => void;
 }
 
-export const Carousel: FC<ICarouselProps> = ({ items, navigation }) => {
-	const handleItemPress = (id) => {navigation.navigate('Details', { id: id })}
+export const Carousel: FC<ICarouselProps> = ({ items, onItemPress }) => {
 	return (
 		<View style={styles.wrapper}>
 			<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-				{items.map(item =>
-						<CarouselItem key={item.id} item={item} disabled={items.indexOf(item) !== 0} onPress={() => handleItemPress(item.id)}/>
+				{items.map((item, i) =>
+					<CarouselItem key={item.id} item={item} disabled={i !== 0} onPress={() => onItemPress(item.id)} />
 				)}
 			</ScrollView>
 		</View>

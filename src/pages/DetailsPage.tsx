@@ -3,9 +3,10 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 import { TopBar } from '../components/TopBar';
 import { Topic } from '../components/Topic';
+import { IArticle, IFullTopic } from '../types';
 
-export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
-	const [topic, setTopic] = useState<IFullTopic>(null);
+export const DetailsPage: FC<NativeStackScreenProps<any>> = (props) => {
+	const [topic, setTopic] = useState<IFullTopic | null>(null);
 
 	useEffect(() => {
 		fetch(`http://localhost:3001/topics/${props.route.params.id}`)
@@ -14,36 +15,37 @@ export const DetailsPage: FC = (props: NativeStackScreenProps<any>) => {
 			.catch(error => console.log(error))
 	}, []);
 
+
+	const handleTopicPress = (item: IFullTopic, article: IArticle) => props.navigation.navigate('Article', { item, article })
+
 	const topicList = useMemo(() => {
 		return (
 			!topic || topic.articles && (
 				<ScrollView horizontal={false} showsVerticalScrollIndicator={false} style={styles.list}>
 					{topic.articles.map(article => {
 						return <Topic key={article.id}
-									  item={topic}
-									  article={article}
-									  id={article.id}
-									  navigation={props.navigation}/>
+							item={topic}
+							article={article}
+							onTopicPress={() => handleTopicPress(topic, article)} />
 					})}
 				</ScrollView>
 			)
 		)
 	}, [topic])
 
+
 	return (
-		useMemo(() => {
-			return topic && (
-				<View style={styles.main}>
-					<TopBar item={topic} navigation={props.navigation}></TopBar>
-					<View style={styles.details}>
-						<Text style={styles.title}>{topic.title}</Text>
-						<Text style={styles.description}>{topic.description}</Text>
-						<Text style={styles.ubersicht}>Übersicht</Text>
-						{topicList}
-					</View>
+		topic && (
+			<View style={styles.main}>
+				<TopBar item={topic} navigation={props.navigation} />
+				<View style={styles.details}>
+					<Text style={styles.title}>{topic.title}</Text>
+					<Text style={styles.description}>{topic.description}</Text>
+					<Text style={styles.ubersicht}>Übersicht</Text>
+					{topicList}
 				</View>
-			)
-		}, [topic])
+			</View>
+		)
 	)
 }
 
@@ -84,20 +86,3 @@ const styles = StyleSheet.create({
 		marginBottom: 20
 	}
 });
-
-export interface IFullTopic {
-	id: string;
-	category: string;
-	title: string;
-	description: string;
-	articles: IArticle[];
-}
-
-export interface IArticle {
-	id: string;
-	title: string;
-	shortDescription: string;
-	readingTime: number;
-	image: null | string;
-}
-

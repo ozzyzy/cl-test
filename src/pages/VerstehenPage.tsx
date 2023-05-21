@@ -1,8 +1,9 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Carousel } from '../components/Carousel';
 import { NavigationProp } from '@react-navigation/core';
 import CurveIcon from '../../assets/icons/curve.svg';
+import { ITopic } from '../types';
 
 
 interface IVerstehenPageProps {
@@ -10,7 +11,7 @@ interface IVerstehenPageProps {
 }
 
 export const VerstehenPage: FC<IVerstehenPageProps> = ({ navigation }) => {
-	const [topics, setTopics] = useState<ITopic[]>(null);
+	const [topics, setTopics] = useState<ITopic[] | null>(null);
 
 	useEffect(() => {
 		fetch('http://localhost:3001/topics')
@@ -19,26 +20,24 @@ export const VerstehenPage: FC<IVerstehenPageProps> = ({ navigation }) => {
 			.catch(error => console.log(error))
 	}, []);
 
+	const handleCarouselItemPress = (id: string) => { navigation.navigate('Details', { id: id }) }
+
 	return (
-		useMemo(() => {
-			return (
-				<ScrollView showsVerticalScrollIndicator={false}>
-					<View style={styles.main}>
-						<View style={styles.top}>
-							<Text style={styles.title}>Verstehen</Text>
-							<Text style={styles.description}>Wir helfen dir, den Klimawandel zu verstehen, damit du deinen Einfluss bewusst verringern kannst.</Text>
-						</View>
-						<View style={styles.curve}>
-							<CurveIcon width={40} height={40}></CurveIcon>
-						</View>
-						<View style={styles.block}>
-							<Text style={styles.subtitle}>Deine wichtigsten {'\n'}Themen</Text>
-							{topics && <Carousel items={topics} navigation={navigation}/>}
-						</View>
-					</View>
-				</ScrollView>
-			)
-		}, [topics])
+		<ScrollView showsVerticalScrollIndicator={false}>
+			<View style={styles.main}>
+				<View style={styles.top}>
+					<Text style={styles.title}>Verstehen</Text>
+					<Text style={styles.description}>Wir helfen dir, den Klimawandel zu verstehen, damit du deinen Einfluss bewusst verringern kannst.</Text>
+				</View>
+				<View style={styles.curve}>
+					<CurveIcon width={40} height={40}></CurveIcon>
+				</View>
+				<View style={styles.block}>
+					<Text style={styles.subtitle}>Deine wichtigsten {'\n'}Themen</Text>
+					{topics && <Carousel items={topics} onItemPress={handleCarouselItemPress} />}
+				</View>
+			</View>
+		</ScrollView>
 	)
 }
 
@@ -91,8 +90,3 @@ const styles = StyleSheet.create({
 		marginTop: -7,
 	}
 });
-
-export interface ITopic {
-	id: string;
-	name: string;
-}

@@ -2,17 +2,16 @@ import { FC } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { getIcon } from '../utils/getIcon';
 import ArrowIcon from '../../assets/icons/arrow.svg';
-import { IFullTopic } from '../pages/DetailsPage';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import { getColor } from '../utils/getColor';
 import { Shadow } from 'react-native-shadow-2';
+import { IFullTopic } from '../types';
 
 
 interface ITopBarProps {
 	item: IFullTopic;
 	navigation: NativeStackNavigationProp<any, any>;
 }
-
 
 export const TopBar: FC<ITopBarProps> = ({ item, navigation }) => {
 	const color = getColor(item.id);

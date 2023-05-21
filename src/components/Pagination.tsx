@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		backgroundColor: '#FFFAF5',
 		height: 52,
-		// возможно можно короткую запись
 		paddingLeft: 24,
 		paddingRight: 24,
 	},

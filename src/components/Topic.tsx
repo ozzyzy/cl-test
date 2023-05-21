@@ -2,33 +2,32 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import React, { FC } from 'react';
 import ClockIcon from '../../assets/icons/clock.svg';
 import { Shadow } from 'react-native-shadow-2';
-import { IArticle, IFullTopic } from '../pages/DetailsPage';
-import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { IArticle, IFullTopic } from '../types';
 
 interface ITopicProps {
 	key: string;
 	item: IFullTopic;
 	article: IArticle;
-	id: string;
-	navigation: NativeStackNavigationProp<any, any>;
+	onTopicPress: VoidFunction;
 }
 
-export const TopicComponent: FC<ITopicProps> = (props) => {
+export const TopicComponent: FC<ITopicProps> = ({article, onTopicPress}) => {
+	const {image, id, title, shortDescription, readingTime} = article;
 	return (
 		<Shadow distance={5} startColor='#EEEEEE' endColor='#FCFCFC' offset={[3, 4]} style={{ width: '100%', paddingLeft: 2, paddingRight: 2, marginBottom: 16 }}>
 			<View style={styles.article}>
-				<Image source={!props.article.image ? require('../../assets/images/mock.png') : props.article.image}
+				<Image source={!image ? require('../../assets/images/mock.png') : image}
 					   style={styles.image} />
 				<TouchableOpacity style={styles.info}
-								  disabled={props.article.id !== '1'}
-								  onPress={() => props.navigation.navigate('Article', { id: props.article.id, item: props.item, article: props.article })}>
+								  disabled={id !== '1'}
+								  onPress={onTopicPress}>
 					<View>
-						<Text style={styles.articleTitle}>{props.article.title}</Text>
-						<Text style={styles.articleText}>{props.article.shortDescription}</Text>
+						<Text style={styles.articleTitle}>{title}</Text>
+						<Text style={styles.articleText}>{shortDescription}</Text>
 					</View>
 					<View style={styles.clock}>
 						<ClockIcon width={13} height={13} style={styles.clockIcon} />
-						<Text style={styles.articleText}>{props.article.readingTime} min</Text>
+						<Text style={styles.articleText}>{readingTime} min</Text>
 					</View>
 				</TouchableOpacity>
 			</View>

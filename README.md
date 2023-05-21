@@ -36,11 +36,9 @@ React Native was used for the project. Additional packages were installed for sp
 
 **What's next**
 
-* It is necessary to expand the server request handlers to include loading and error screens. For this purpose, react-query can be used, for example.
+* It is necessary to expand the server request handlers and include loading and error screens. For this purpose, react-query can be used, for example.
 * It is possible to write an extensible function for box-shadow that works on both iOS and Android (this is a separate task).
 * Add specific mock images.
 * Change the fonts.
-* If the design and technical specifications reveal that the pages of other parts of the application resemble 
-* those already implemented, it is necessary to create a common scalable component that will serve as the base 
-* for all pages. If not, develop the remaining pages separately.
+* If the design and technical specifications reveal that the pages of other parts of the application resemble those already implemented, it is necessary to create a common scalable component that will serve as the base for all pages. If not, develop the remaining pages separately.
  

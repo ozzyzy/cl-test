@@ -4,18 +4,24 @@ import { getImage } from '../utils/getImage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getColor } from '../utils/getColor';
 import { getIcon } from '../utils/getIcon';
-import { ITopic } from '../pages/VerstehenPage';
+import { ITopic } from '../types';
 
-export const CarouselItem: FC<ICarouselItem> = ({item, disabled, onPress}) => {
+interface ICarouselItem {
+	item: ITopic;
+	disabled: boolean;
+	onPress: VoidFunction;
+}
+
+export const CarouselItem: FC<ICarouselItem> = ({ item, disabled, onPress }) => {
 	return (
 		<TouchableOpacity style={styles.item}
-						  key={item.id}
-						  disabled={disabled}
-						  onPress={() => onPress()}>
+			key={item.id}
+			disabled={disabled}
+			onPress={() => onPress()}>
 			<ImageBackground source={getImage(item.id)}
-							 resizeMode="cover"
-							 imageStyle={{ borderRadius: 16 }}
-							 style={styles.image}>
+				resizeMode="cover"
+				imageStyle={{ borderRadius: 16 }}
+				style={styles.image}>
 				<LinearGradient
 					colors={['transparent', getColor(item.id)]}
 					style={styles.linearGradient}
@@ -66,9 +72,3 @@ const styles = StyleSheet.create({
 		borderRadius: 16
 	}
 });
-
-interface ICarouselItem {
-	item: ITopic;
-	disabled: boolean;
-	onPress: Function;
-}

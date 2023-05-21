@@ -14,7 +14,7 @@ export const TabBar: FC<BottomTabBarProps> = ({ state, descriptors, navigation }
 
 					const label = (() => {
 						if (options.tabBarLabel !== undefined) {
-							return options.tabBarLabel;
+							return options.tabBarLabel as string;
 						}
 						if (options.title !== undefined) {
 							return options.title;
@@ -46,9 +46,9 @@ export const TabBar: FC<BottomTabBarProps> = ({ state, descriptors, navigation }
 							style={styles.button}
 							disabled={!isVerstehen}
 						>
-							{getNavigationIcon((label as string), isFocused)}
+							{getNavigationIcon(label, isFocused)}
 							<Text style={[styles.buttonText, isFocused ? styles.dark : styles.light]}>
-								{label as string}
+								{label}
 							</Text>
 						</TouchableOpacity>
 					);

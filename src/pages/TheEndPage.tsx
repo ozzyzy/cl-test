@@ -6,15 +6,8 @@ interface TheEndPageProps {
 	onSwipeRight: Function;
 }
 
-export const TheEndPage: FC<TheEndPageProps> = (props) => {
-	const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6);
-
-	function onSwipeLeft() {
-	}
-
-	function onSwipeRight() {
-		props.onSwipeRight();
-	}
+export const TheEndPage: FC<TheEndPageProps> = ({ onSwipeRight }) => {
+	const { onTouchStart, onTouchEnd } = useSwipe(() => { }, onSwipeRight, 6);
 
 	return (
 		<View style={styles.main} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>

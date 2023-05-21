@@ -10,10 +10,10 @@ export const VerstehenStackPage: FC = () => {
 
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="VerstehenPage" component={VerstehenPage}></Stack.Screen>
-			<Stack.Screen name="Details" component={DetailsPage}></Stack.Screen>
-			<Stack.Screen name="Article" component={ArticlePage}></Stack.Screen>
-			<Stack.Screen name="TheEnd" component={TheEndPage}></Stack.Screen>
+			<Stack.Screen name="VerstehenPage" component={VerstehenPage}/>
+			<Stack.Screen name="Details" component={DetailsPage}/>
+			<Stack.Screen name="Article" component={ArticlePage}/>
+			<Stack.Screen name="TheEnd" component={TheEndPage}/>
 		</Stack.Navigator>
 	)
 }
